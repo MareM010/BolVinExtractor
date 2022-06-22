@@ -1,19 +1,8 @@
 package com.example.bolvinextractor;
 
 import com.google.zxing.*;
-import com.google.zxing.multi.GenericMultipleBarcodeReader;
-import com.google.zxing.multi.MultipleBarcodeReader;
-import com.google.zxing.oned.CodaBarReader;
-import com.google.zxing.oned.Code128Reader;
-import com.google.zxing.oned.MultiFormatUPCEANReader;
-import com.google.zxing.pdf417.decoder.ec.ErrorCorrection;
-import com.google.zxing.qrcode.QRCodeReader;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -22,49 +11,31 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.robot.Robot;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.Tesseract1;
 import net.sourceforge.tess4j.TesseractException;
 
-import java.awt.image.DataBufferByte;
-import java.io.Reader;
-import java.lang.Object;
-import java.awt.image.RenderedImage;
 import java.io.*;
 import java.awt.image.BufferedImage;
-import javax.swing.*;
-import javafx.embed.swing.SwingFXUtils;
-import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
-import com.google.zxing.common.HybridBinarizer;
-import java.lang.Object;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
 
-import net.sourceforge.tess4j.util.ImageHelper;
+import javafx.embed.swing.SwingFXUtils;
+
+import java.util.Arrays;
+
 import nu.pattern.OpenCV;
 import org.opencv.core.*;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
-import org.opencv.videoio.VideoCapture;
 
 import javax.imageio.ImageIO;
 
-import static com.google.zxing.DecodeHintType.TRY_HARDER;
-import static org.opencv.imgproc.Imgproc.THRESH_BINARY;
-import static org.opencv.imgproc.Imgproc.threshold;
+import static com.example.bolvinextractor.BarCodeClass.readMultipleBarcodeImageData;
 
 
-public class HelloController {
+public class Controller {
 Image image1;
     public StackPane image_bol_stack_pane;
     final Canvas imageCanvas = new Canvas();
@@ -104,7 +75,7 @@ Image image1;
 //    }
 
     @FXML
-    private RadioButton bar_code_mode;
+    protected RadioButton bar_code_mode;
 
     @FXML
     private Button copy_1;
@@ -194,7 +165,7 @@ Image image1;
     private ProgressBar progress_bar;
 
     @FXML
-    private RadioButton text_recongition_mode;
+    protected RadioButton text_recongition_mode;
 
     @FXML
     private TextField vin_1;
@@ -304,9 +275,6 @@ Image image1;
 
     @FXML
     void deleteAllButton(ActionEvent event) throws TesseractException {
-    bar_code_mode.setToggleGroup(tg);
-    text_recongition_mode.setToggleGroup(tg);
-
     }
 
     @FXML
@@ -420,6 +388,8 @@ image_cropped.setImage(newImage);
         imageCanvas.setHeight(image1.getHeight());
 
 
+
+
     }
 
 
@@ -427,29 +397,9 @@ image_cropped.setImage(newImage);
 
 
 
-    private static String readSingleBarcodeImageData(BufferedImage croppedImage) throws NotFoundException, IOException {
 
-        BinaryBitmap bb = new BinaryBitmap(new HybridBinarizer(new BufferedImageLuminanceSource(croppedImage)));
-        MultipleBarcodeReader mbReader = new GenericMultipleBarcodeReader(new MultiFormatReader());
-        Hashtable<DecodeHintType, Object> hints = new Hashtable<>();
-        hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
-        Result[] currentBarCodeResult = mbReader.decodeMultiple(bb, hints);
-        return currentBarCodeResult[0].getText();
-    }
 
-    private static Result[] readMultipleBarcodeImageData(BufferedImage croppedImage) throws NotFoundException, IOException {//
-        BinaryBitmap bb = new BinaryBitmap(new HybridBinarizer(new BufferedImageLuminanceSource(croppedImage)));
-        MultipleBarcodeReader mbReader = new GenericMultipleBarcodeReader(new MultiFormatReader());
-        Hashtable<DecodeHintType, Object> hints = new Hashtable<>();
-        hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
-        /*List<BarcodeInfo> list = new ArrayList<>();//if have any custom data then convert to dto like this
-        for (Result result : mbReader.decodeMultiple(bb, hints)) {
-            list.add(new BarcodeInfo(result.getText(), result.getBarcodeFormat().name()));
-        }
-        return list;*/
-        Result[] currentBarCodeResult = mbReader.decodeMultiple(bb, hints);//every result represent a bar code
-        return currentBarCodeResult;
-    }
+
 
     public void textImageExtraction() throws TesseractException, NotFoundException, FormatException, IOException {
         BufferedImage bufImage = null;
@@ -541,7 +491,6 @@ image_cropped.setImage(newImage);
 
         //For Read Multiple Bar Code Image Info
         System.out.println(Arrays.toString(readMultipleBarcodeImageData(croppedBufferedImage)));
-
 
 
 
