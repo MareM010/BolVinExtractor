@@ -10,7 +10,6 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -19,34 +18,33 @@
    <children>
       <HBox layoutY="-2.0" prefHeight="877.0" prefWidth="1300.0">
          <children>
-            <HBox prefHeight="877.0" prefWidth="600.0" HBox.hgrow="NEVER">
+            <HBox prefHeight="878.0" prefWidth="600.0" HBox.hgrow="NEVER">
                <children>
-                  <StackPane id="image_bol_stack_pane" fx:id="image_bol_stack_pane" maxHeight="878.0" maxWidth="576.0" minHeight="878.0" minWidth="576.0" HBox.hgrow="NEVER">
+                  <Pane id="large_bol_pane" fx:id="large_bol_pane" prefHeight="200.0">
                      <children>
-                        <ImageView id="image_bol" fx:id="image_bol" fitHeight="878.0" fitWidth="576.0" preserveRatio="true" onMouseDragged="#imageCropMouseDragged" onMousePressed="#imageCropMousePressed" onMouseReleased="#imageCropMouseRelased" pickOnBounds="true" StackPane.alignment="CENTER">
+                        <ImageView id="image_bol" fx:id="image_bol" fitHeight="877.0" fitWidth="600.0" onMouseDragged="#imageCropMouseDragged" onMousePressed="#imageCropMousePressed" onMouseReleased="#imageCropMouseRelased" pickOnBounds="true" preserveRatio="true">
                            <viewport>
-                              <Rectangle2D height="878.0" width="576.0" />
+                              <Rectangle2D height="878.0" width="600.0" />
                            </viewport>
                         </ImageView>
                      </children>
-                  </StackPane>
+                  </Pane>
                </children>
             </HBox>
-            <ImageView fx:id="image_cropped" fitHeight="330.0" fitWidth="326.0" pickOnBounds="true" preserveRatio="true" />
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox prefHeight="495.0" prefWidth="80.0">
                <children>
                   <Button fx:id="delete1" mnemonicParsing="false" onAction="#delete_1" prefHeight="40.0" prefWidth="82.0" text="Delete" />
-                  <Button fx:id="delete11" mnemonicParsing="false" onAction="#delete_1" prefHeight="40.0" prefWidth="82.0" text="Delete" />
-                  <Button fx:id="delete12" mnemonicParsing="false" onAction="#delete_1" prefHeight="40.0" prefWidth="82.0" text="Delete" />
-                  <Button fx:id="delete13" mnemonicParsing="false" onAction="#delete_1" prefHeight="40.0" prefWidth="82.0" text="Delete" />
-                  <Button fx:id="delete14" mnemonicParsing="false" onAction="#delete_1" prefHeight="40.0" prefWidth="82.0" text="Delete" />
-                  <Button fx:id="delete15" mnemonicParsing="false" onAction="#delete_1" prefHeight="40.0" prefWidth="82.0" text="Delete" />
-                  <Button fx:id="delete16" mnemonicParsing="false" onAction="#delete_1" prefHeight="40.0" prefWidth="82.0" text="Delete" />
-                  <Button fx:id="delete17" mnemonicParsing="false" onAction="#delete_1" prefHeight="40.0" prefWidth="82.0" text="Delete" />
-                  <Button fx:id="delete18" mnemonicParsing="false" onAction="#delete_1" prefHeight="40.0" prefWidth="82.0" text="Delete" />
-                  <Button fx:id="delete19" mnemonicParsing="false" onAction="#delete_1" prefHeight="40.0" prefWidth="82.0" text="Delete" />
-                  <Button fx:id="delete110" mnemonicParsing="false" onAction="#delete_1" prefHeight="40.0" prefWidth="82.0" text="Delete" />
-                  <Button fx:id="delete1101" mnemonicParsing="false" onAction="#delete_1" prefHeight="40.0" prefWidth="82.0" text="Delete" />
+                  <Button fx:id="delete2" mnemonicParsing="false" onAction="#delete_2" prefHeight="40.0" prefWidth="82.0" text="Delete" />
+                  <Button fx:id="delete3" mnemonicParsing="false" onAction="#delete_3" prefHeight="40.0" prefWidth="82.0" text="Delete" />
+                  <Button fx:id="delete4" mnemonicParsing="false" onAction="#delete_4" prefHeight="40.0" prefWidth="82.0" text="Delete" />
+                  <Button fx:id="delete5" mnemonicParsing="false" onAction="#delete_5" prefHeight="40.0" prefWidth="82.0" text="Delete" />
+                  <Button fx:id="delete6" mnemonicParsing="false" onAction="#delete_6" prefHeight="40.0" prefWidth="82.0" text="Delete" />
+                  <Button fx:id="delete7" mnemonicParsing="false" onAction="#delete_7" prefHeight="40.0" prefWidth="82.0" text="Delete" />
+                  <Button fx:id="delete8" mnemonicParsing="false" onAction="#delete_8" prefHeight="40.0" prefWidth="82.0" text="Delete" />
+                  <Button fx:id="delete9" mnemonicParsing="false" onAction="#delete_9" prefHeight="40.0" prefWidth="82.0" text="Delete" />
+                  <Button fx:id="delete10" mnemonicParsing="false" onAction="#delete_10" prefHeight="40.0" prefWidth="82.0" text="Delete" />
+                  <Button fx:id="delete11" mnemonicParsing="false" onAction="#delete_11" prefHeight="40.0" prefWidth="82.0" text="Delete" />
+                  <Button fx:id="delete12" mnemonicParsing="false" onAction="#delete_12" prefHeight="40.0" prefWidth="82.0" text="Delete" />
                </children>
             </VBox>
             <VBox prefHeight="377.0" prefWidth="104.0">
@@ -68,18 +66,19 @@
                         <Font size="22.0" />
                      </font>
                   </Button>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="VIN Numbers" textAlignment="CENTER" textOrigin="CENTER" wrappingWidth="245.13671875">
-                     <font>
-                        <Font size="18.0" />
-                     </font></Text>
                   <Button fx:id="delete_all" mnemonicParsing="false" onAction="#deleteAllButton" prefHeight="42.0" prefWidth="568.0" text="Delete All VIN Numbers" textAlignment="CENTER">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Button>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="VIN Numbers" textAlignment="CENTER" textOrigin="CENTER" wrappingWidth="324.13671875">
+                     <font>
+                        <Font size="18.0" />
+                     </font></Text>
+                  <ImageView fx:id="image_cropped" fitHeight="285.0" fitWidth="326.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox prefHeight="200.0" prefWidth="80.0">
                <children>
                   <Button fx:id="copy_1" mnemonicParsing="false" onAction="#copyText1" prefHeight="40.0" prefWidth="82.0" text="Copy" />
                   <Button fx:id="copy_2" mnemonicParsing="false" onAction="#copyText2" prefHeight="40.0" prefWidth="82.0" text="Copy" />
@@ -93,9 +92,10 @@
                   <Button fx:id="copy_10" mnemonicParsing="false" onAction="#copyText10" prefHeight="40.0" prefWidth="82.0" text="Copy" />
                   <Button fx:id="copy_11" mnemonicParsing="false" onAction="#copyText11" prefHeight="40.0" prefWidth="82.0" text="Copy" />
                   <Button fx:id="copy_12" mnemonicParsing="false" onAction="#copyText12" prefHeight="40.0" prefWidth="82.0" text="Copy" />
-                  <Button mnemonicParsing="false" prefHeight="41.0" prefWidth="77.0" text="Help" />
+                  <Button mnemonicParsing="false" prefHeight="41.0" prefWidth="82.0" text="Help" />
                </children>
             </VBox>
+            <Pane prefHeight="200.0" prefWidth="200.0" />
          </children>
          <effect>
             <Glow level="0.44" />
@@ -104,8 +104,8 @@
       <ProgressBar fx:id="progress_bar" layoutX="1.0" layoutY="875.0" prefHeight="25.0" prefWidth="575.0" progress="0.0" />
       <ButtonBar layoutX="576.0" layoutY="874.0" prefHeight="25.0" prefWidth="724.0">
          <buttons>
-            <RadioButton fx:id="bar_code_mode" id="bar_code_mode" mnemonicParsing="false" onAction="#barCodeMode" prefHeight="17.0" prefWidth="777.0" text="Bar code reader mode" />
-            <RadioButton fx:id="text_recongition_mode" id="text_recongition_mode" mnemonicParsing="false" onAction="#TextRecongitionMode" text="Text recongition mode" />
+            <RadioButton id="bar_code_mode" fx:id="bar_code_mode" mnemonicParsing="false" onAction="#barCodeMode" prefHeight="17.0" prefWidth="777.0" text="Bar code reader mode" />
+            <RadioButton id="text_recongition_mode" fx:id="text_recongition_mode" mnemonicParsing="false" onAction="#TextRecongitionMode" text="Text recongition mode" />
          </buttons>
       </ButtonBar>
    </children>

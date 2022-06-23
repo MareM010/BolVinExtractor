@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -23,8 +24,8 @@ ToggleGroup tg = new ToggleGroup();
         stage.setTitle("BOL VIN Extractor");
 
 
-        StackPane imageStackPane = (StackPane) scene.lookup("#image_bol_stack_pane");
-       imageStackPane.getChildren().add(rectGroup);
+        Pane imagePane = (Pane) scene.lookup("#large_bol_pane");
+        imagePane.getChildren().add(rectGroup);
 //
 //       Controller helloControllerClass = new Controller();
 
@@ -35,6 +36,7 @@ ToggleGroup tg = new ToggleGroup();
         RadioButton rb2 = (RadioButton) scene.lookup("#text_recongition_mode");
         rb1.setToggleGroup(tg);
         rb2.setToggleGroup(tg);
+        rb1.setSelected(true);
     }
 
     public static void main(String[] args) {

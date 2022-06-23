@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
@@ -18,12 +20,17 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.sourceforge.tess4j.TesseractException;
 
+import java.awt.*;
 import java.io.*;
 import java.awt.image.BufferedImage;
 
 import javafx.embed.swing.SwingFXUtils;
 
 import java.util.Arrays;
+import java.util.Timer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import nu.pattern.OpenCV;
 import org.opencv.core.*;
@@ -37,10 +44,11 @@ import static com.example.bolvinextractor.BarCodeClass.readMultipleBarcodeImageD
 
 public class Controller {
 Image image1;
-    public StackPane image_bol_stack_pane;
-    final Canvas imageCanvas = new Canvas();
-    WritableImage croppedImage;
-    ToggleGroup tg = new ToggleGroup();
+ImageTextExtraction textExtraction = new ImageTextExtraction();
+    // public StackPane image_bol_stack_pane;
+    BufferedImage croppedBufferedImage = null;
+    Canvas imageCanvas = new Canvas();
+    Graphics2D graphics2D;
     double startX, startY, endX, endY;
     Rectangle rect = null;
    public static Group rectGroup = new Group();
@@ -274,13 +282,85 @@ Image image1;
     }
 
     @FXML
-    void deleteAllButton(ActionEvent event) throws TesseractException {
+    void deleteAllButton(ActionEvent event){
+        vin_1.setText("");
+        vin_2.setText("");
+        vin_3.setText("");
+        vin_4.setText("");
+        vin_5.setText("");
+        vin_6.setText("");
+        vin_7.setText("");
+        vin_8.setText("");
+        vin_9.setText("");
+        vin_10.setText("");
+        vin_11.setText("");
+        vin_12.setText("");
+
     }
 
     @FXML
     void delete_1(ActionEvent event) {
+        vin_1.setText("");
 
     }
+
+    @FXML
+    void delete_10(ActionEvent event) {
+        vin_10.setText("");
+    }
+
+    @FXML
+    void delete_11(ActionEvent event) {
+        vin_11.setText("");
+    }
+
+    @FXML
+    void delete_12(ActionEvent event) {
+        vin_12.setText("");
+    }
+
+    @FXML
+    void delete_2(ActionEvent event) {
+        vin_2.setText("");
+    }
+
+    @FXML
+    void delete_3(ActionEvent event) {
+        vin_3.setText("");
+    }
+
+    @FXML
+    void delete_4(ActionEvent event) {
+        vin_4.setText("");
+    }
+
+    @FXML
+    void delete_5(ActionEvent event) {
+        vin_5.setText("");
+    }
+
+    @FXML
+    void delete_6(ActionEvent event) {
+        vin_6.setText("");
+    }
+
+    @FXML
+    void delete_7(ActionEvent event) {
+        vin_7.setText("");
+    }
+
+    @FXML
+    void delete_8(ActionEvent event) {
+        vin_8.setText("");
+    }
+
+    @FXML
+    void delete_9(ActionEvent event) {
+        vin_9.setText("");
+    }
+
+
+
 
     @FXML
     void imageCropMousePressed(MouseEvent event) {
@@ -289,27 +369,21 @@ Image image1;
         startY = event.getY();
 
         rect = new Rectangle();
-        rect.setFill(Color.SNOW);
-    //    rect.setStroke(Color.BLACK);
+        rect.setFill(Color.RED);
 
-rectGroup.getChildren().add(rect);
-
-
+     rectGroup.getChildren().add(rect);
         rectIsBeingDrawn = true;
 
 
     }
-    BufferedImage croppedBufferedImage = null;
     void capturePane() {
 
-
         try {
-            image_cropped.setImage(image1);
             PixelReader reader = image1.getPixelReader();
             WritableImage newImage = new WritableImage(reader, (int) startX, (int) startY, (int) (endX - startX), (int) (endY - startY));
 
             croppedBufferedImage= SwingFXUtils.fromFXImage(newImage, croppedBufferedImage);
-image_cropped.setImage(newImage);
+            image_cropped.setImage(newImage);
 
             ImageIO.write(SwingFXUtils.fromFXImage(newImage, null),
                     "png", new File("C:\\Users\\ghost\\Documents\\OPENCVTEST\\test.png"));
@@ -322,6 +396,7 @@ image_cropped.setImage(newImage);
     @FXML
     void imageCropMouseDragged(MouseEvent event) {
 
+        progress_bar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
         if (rectIsBeingDrawn == true) {
             endX = event.getX();
             endY = event.getY();
@@ -330,6 +405,8 @@ image_cropped.setImage(newImage);
             rect.setY(startY);
             rect.setWidth(endX - startX);
             rect.setHeight(endY - startY);
+
+
          if ( rect.getWidth() < 0 )
          {
           rect.setWidth( - rect.getWidth() ) ;
@@ -346,7 +423,9 @@ image_cropped.setImage(newImage);
     }
 
     @FXML
-    void imageCropMouseRelased(MouseEvent event) throws TesseractException, NotFoundException, FormatException, IOException {
+    void imageCropMouseRelased(MouseEvent event) {
+        int rectCount = rectGroup.getChildren().size();
+
 
         if(rectIsBeingDrawn == true){
             rect.setFill(Color.BLUE);
@@ -354,10 +433,9 @@ image_cropped.setImage(newImage);
         rect = null;
         rectIsBeingDrawn = false;
 
-        rectGroup.getChildren().clear();
-
-        capturePane();
-        textImageExtraction();
+        rectGroup.getChildren().remove(rectCount-1);
+        resultToTextField();
+        progress_bar.setProgress(0);
 
     }
 
@@ -391,114 +469,110 @@ image_cropped.setImage(newImage);
 
 
     }
+// mode = true for bar code text recognition
+// mode = false for text extraction
+    public void resultToTextField(){
+        int i = 0;
+        double progress, p = 1;
+        capturePane();
+        if (bar_code_mode.isSelected()){
+            try {
+                progress = 0.33;
+                while (readMultipleBarcodeImageData(croppedBufferedImage).length > i){
+                    if (vin_1.getText().isEmpty())
+                    vin_1.setText(String.valueOf(readMultipleBarcodeImageData(croppedBufferedImage)[i]));
+                else if (vin_2.getText().isEmpty())
+                    vin_2.setText(String.valueOf(readMultipleBarcodeImageData(croppedBufferedImage)[i]));
+                else if (vin_3.getText().isEmpty())
+                    vin_3.setText(String.valueOf(readMultipleBarcodeImageData(croppedBufferedImage)[i]));
+                else if (vin_4.getText().isEmpty())
+                    vin_4.setText(String.valueOf(readMultipleBarcodeImageData(croppedBufferedImage)[i]));
+                else if (vin_5.getText().isEmpty())
+                    vin_5.setText(String.valueOf(readMultipleBarcodeImageData(croppedBufferedImage)[i]));
+                else if (vin_6.getText().isEmpty())
+                    vin_6.setText(String.valueOf(readMultipleBarcodeImageData(croppedBufferedImage)[i]));
+                else if (vin_7.getText().isEmpty())
+                    vin_7.setText(String.valueOf(readMultipleBarcodeImageData(croppedBufferedImage)[i]));
+                else if (vin_8.getText().isEmpty())
+                    vin_8.setText(String.valueOf(readMultipleBarcodeImageData(croppedBufferedImage)[i]));
+                else if (vin_9.getText().isEmpty())
+                    vin_9.setText(String.valueOf(readMultipleBarcodeImageData(croppedBufferedImage)[i]));
+                else if (vin_10.getText().isEmpty())
+                    vin_10.setText(String.valueOf(readMultipleBarcodeImageData(croppedBufferedImage)[i]));
+                else if (vin_11.getText().isEmpty())
+                    vin_11.setText(String.valueOf(readMultipleBarcodeImageData(croppedBufferedImage)[i]));
+                else if (vin_12.getText().isEmpty())
+                    vin_12.setText(String.valueOf(readMultipleBarcodeImageData(croppedBufferedImage)[i]));
 
+                 //   progress = progress + 0.33;
+                    i++;
+                }
 
-
-
-
-
-
-
-
-
-    public void textImageExtraction() throws TesseractException, NotFoundException, FormatException, IOException {
-        BufferedImage bufImage = null;
-        // For proper execution of native libraries
-        // Core.NATIVE_LIBRARY_NAME must be loaded
-        // before calling any of the opencv methods
-        try {
-            OpenCV.loadLocally();
-
-            Mat src = Imgcodecs.imread("C:\\Users\\ghost\\Documents\\OPENCVTEST\\test.png", Imgcodecs.IMREAD_GRAYSCALE);
-
-            Mat destination = new Mat(src.rows(), src.cols(), src.type());
-//
-//            Size upscaleSize = new Size(src.cols()*2, src.rows()*2);
-//            Imgproc.resize(src, destination, upscaleSize, 0, 0, Imgproc.INTER_AREA);
-////
-//            Imgproc.adaptiveThreshold(src, destination, 125,
-//                    Imgproc.ADAPTIVE_THRESH_MEAN_C,
-//                    THRESH_BINARY, 11, 12);
-
-//
-//            src.convertTo(destination, -1, alpha, beta);
-//            Imgproc.cvtColor(src, destination, Imgproc.COLOR_RGB2GRAY);
-            // ove dve linije iznad mi kre[uju kod
-
-
-            bufImage = (BufferedImage) HighGui.toBufferedImage(destination);
-    //       image_cropped.setImage(SwingFXUtils.toFXImage(bufImage,null));
-
-
+//                if (vin_1.getText().isEmpty())
+//                    vin_1.setText((Arrays.toString(readMultipleBarcodeImageData(croppedBufferedImage))));
+//                else if (vin_2.getText().isEmpty())
+//                    vin_2.setText((Arrays.toString(readMultipleBarcodeImageData(croppedBufferedImage))));
+//                else if (vin_3.getText().isEmpty())
+//                    vin_3.setText((Arrays.toString(readMultipleBarcodeImageData(croppedBufferedImage))));
+//                else if (vin_4.getText().isEmpty())
+//                    vin_4.setText((Arrays.toString(readMultipleBarcodeImageData(croppedBufferedImage))));
+//                else if (vin_5.getText().isEmpty())
+//                    vin_5.setText((Arrays.toString(readMultipleBarcodeImageData(croppedBufferedImage))));
+//                else if (vin_6.getText().isEmpty())
+//                    vin_6.setText((Arrays.toString(readMultipleBarcodeImageData(croppedBufferedImage))));
+//                else if (vin_7.getText().isEmpty())
+//                    vin_7.setText((Arrays.toString(readMultipleBarcodeImageData(croppedBufferedImage))));
+//                else if (vin_8.getText().isEmpty())
+//                    vin_8.setText((Arrays.toString(readMultipleBarcodeImageData(croppedBufferedImage))));
+//                else if (vin_9.getText().isEmpty())
+//                    vin_9.setText((Arrays.toString(readMultipleBarcodeImageData(croppedBufferedImage))));
+//                else if (vin_10.getText().isEmpty())
+//                    vin_10.setText((Arrays.toString(readMultipleBarcodeImageData(croppedBufferedImage))));
+//                else if (vin_11.getText().isEmpty())
+//                    vin_11.setText((Arrays.toString(readMultipleBarcodeImageData(croppedBufferedImage))));
+//                else if (vin_12.getText().isEmpty())
+//                    vin_12.setText((Arrays.toString(readMultipleBarcodeImageData(croppedBufferedImage))));
+            }
+            catch (Exception e){
+                System.out.println("Exception: "  + e.getMessage());
+            }
         }
-        catch (Exception e){
-            System.out.println("Error in OpenCV image processing. Exception: "+ e.getMessage());
+        else if (text_recongition_mode.isSelected()){
+            image_cropped.setImage(textExtraction.textImageExtraction());
+            if (vin_1.getText().isEmpty())
+                vin_1.setText(textExtraction.returnResult());
+            else if (vin_2.getText().isEmpty())
+                vin_2.setText(textExtraction.returnResult());
+            else if (vin_3.getText().isEmpty())
+                vin_3.setText(textExtraction.returnResult());
+            else if (vin_4.getText().isEmpty())
+                vin_4.setText(textExtraction.returnResult());
+            else if (vin_5.getText().isEmpty())
+                vin_5.setText(textExtraction.returnResult());
+            else if (vin_6.getText().isEmpty())
+                vin_6.setText(textExtraction.returnResult());
+            else if (vin_7.getText().isEmpty())
+                vin_7.setText(textExtraction.returnResult());
+            else if (vin_8.getText().isEmpty())
+                vin_8.setText(textExtraction.returnResult());
+            else if (vin_9.getText().isEmpty())
+                vin_9.setText(textExtraction.returnResult());
+            else if (vin_10.getText().isEmpty())
+                vin_10.setText(textExtraction.returnResult());
+            else if (vin_11.getText().isEmpty())
+                vin_11.setText(textExtraction.returnResult());
+            else if (vin_12.getText().isEmpty())
+                vin_12.setText(textExtraction.returnResult());
         }
-
-//        try {
-//            //Reading the image
-//            Mat src = Imgcodecs.imread("C:\\Users\\ghost\\IdeaProjects\\BOL VIN Extractor\\src\\main\\resources\\com\\example\\bolvinextractor\\BOL.png");
-//            //Creating the empty destination matrix
-//            Mat dst = new Mat();
-//            //Converting the image to grey scale
-//            Imgproc.cvtColor(src, dst, Imgproc.COLOR_RGB2GRAY);
-//            //Instantiating the Imagecodecs class
-//            Imgcodecs imageCodecs = new Imgcodecs();
-//            //Writing the image
-//            imageCodecs.imwrite("colortogreyscale.jpg", dst);
-//            System.out.println("Image Saved");
-//
-//        } catch (Exception e) {
-//            System.out.println("Error: " + e.getMessage());
-//        }
-
-
-
-//            Tsseract instance = new Tesseract();
-//            instance.setLanguage("eng");
-//          //  File imageFile = new File("C:\\Users\\ghost\\Documents\\OPENCVTEST\\outputtest.png");
-//
-//            instance.setDatapath("C:\\Users\\ghost\\.m2\\repository\\net\\sourceforge\\tess4j\\tess4j\\5.2.1\\tessdata");
-//          //  File fileForScanning = new File(String.valueOf(croppedImage));
-//            System.out.println(instance.doOCR(bufImage));
-//
-//
-//            BufferedImage buffImage2;
-//            buffImage2 = SwingFXUtils.fromFXImage(image1,null);
-//
-//            BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(
-//                    new BufferedImageLuminanceSource(croppedBufferedImage)));
-//
-//            MultiFormatReader reader2 = new MultiFormatReader();
-//
-//         //   Result result = new MultiFormatReader().decode(bitmap);
-//
-//        MultipleBarcodeReader multipleReader = new GenericMultipleBarcodeReader(reader2);
-//        Result[] results = multipleReader.decodeMultiple(bitmap);
-//        int resultsCount = results.length;
-//        int i =0;
-//            while (i<resultsCount){
-//                System.out.println(results[i]);
-//                i++;
-//            }
-
-            // zxing kod ali ne radi, baca exception, importovano sve
-
-
-        //For Read Single Bar Code Image Info
-    //
-        //    System.out.println(readSingleBarcodeImageData(croppedBufferedImage));
-
-        //For Read Multiple Bar Code Image Info
-        System.out.println(Arrays.toString(readMultipleBarcodeImageData(croppedBufferedImage)));
-
-
-
+        else {
+            System.out.println("Select mode please");
+        }
 
     }
 
+    void drawRectangles(Graphics graphics){
 
-
+    }
 
 
 }
